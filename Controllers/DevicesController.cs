@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controllers
 {
-    public class DevicesController : Controller
+    public class DevicesController : Controller 
     {
         private readonly DeviceDbContext _context;
 
