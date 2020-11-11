@@ -1,27 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controllers
 {
-    public class DevicesController : Controller 
+    public class DevicesController : Controller
     {
         private readonly DeviceDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public DevicesController(DeviceDbContext context)
+        public DevicesController(DeviceDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: Employee
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Devices.ToListAsync());
+            var userId = _httpContextAccessor.HttpContext.User?.Claims?
+                 .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var devices = await _context.Devices.Where(x => x.UserId == userId).ToListAsync();
+
+            return View(devices);
         }
 
 
@@ -39,10 +52,17 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("DeviceId,ModelName,MaxWaterAmount,MaxCoffeeWeight,Status")] Device device)
+        public async Task<IActionResult> AddOrEdit(Device device)
         {
+
             if (ModelState.IsValid)
             {
+                var userId = _httpContextAccessor.HttpContext.User?.Claims?
+                 .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                var xdd = _context.Users.FirstOrDefault(x => x.Id == userId);
+                device.UserId = userId;
+
                 if (device.DeviceId == 0)
                     _context.Add(device);
                 else
