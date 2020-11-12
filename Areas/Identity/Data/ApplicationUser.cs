@@ -15,7 +15,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Ide
         [Column(TypeName = "nvarchar(100)")]
         public string Nick { get; set; }
 
-        public ICollection<IoTDevice> Devices { get; set; }
+        public ICollection<IoTDevice> IoTDevices { get; set; }
 
         //[PersonalData]
         //[Column(TypeName = "nvarchar(100)")]

@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data;
-//using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migrations;
+using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migrations;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.SimulatedDeviceManager;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +20,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         private readonly DeviceDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private static List<AddDevice>addDevices = new List<AddDevice>();
 
         public DevicesController(DeviceDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -34,27 +35,27 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
             var userId = _httpContextAccessor.HttpContext.User?.Claims?
                  .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            var devices = await _context.Devices.Where(x => x.UserId == userId).ToListAsync();
+            var devices = await _context.IoTDevices.Where(x => x.UserId == userId).ToListAsync();
 
             return View(devices);
         }
 
 
-        // GET: Employee/Create
+        // GET: Device/Create
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
                 return View(new IoTDevice());
             else
-                return View(_context.Devices.Find(id));
+                return View(_context.IoTDevices.Find(id));
         }
 
-        // POST: Employee/Create
+        // POST: Device/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit(IoTDevice device)
+        public async Task<IActionResult> AddOrEdit(IoTDevice IoTdevice)
         {
 
             if (ModelState.IsValid)
@@ -64,28 +65,40 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
                  .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 var xdd = _context.Users.FirstOrDefault(x => x.Id == userId);
-                device.UserId = userId;
-                if (device.DeviceId == 0) { 
-                    _context.Add(device);
-                    var deviceid = device.DeviceId;
-                    deviceName = deviceid + "device" + userId;
+                IoTdevice.UserId = userId;
+                if (IoTdevice.DeviceId == 0) {
+                    //_context.Add(IoTdevice);
+                    //deviceName = devicenumber++ + "device" + userId;
+                    //AddDevice addDevice = new AddDevice(deviceName);
+                    ////IoTdevice.deviceAdd = addDevice;
+                    //IoTdevice.ConnectionString = addDevice.GetConnectionSrting();
+                    //await _context.SaveChangesAsync();
+                    _context.Add(IoTdevice);
+                    deviceName = IoTdevice.ModelName.Replace(" ", "") + userId;
                     AddDevice addDevice = new AddDevice(deviceName);
-                    device.ConnectionString = addDevice.GetConnectionSrting();
+                    addDevices.Add(addDevice);
+                    //IoTdevice.deviceAdd = addDevice;
+                    IoTdevice.ConnectionString = addDevice.GetConnectionSrting();
                 }
                 else
-                    _context.Update(device);
+                    _context.Update(IoTdevice);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(device);
+            return View(IoTdevice);
         }
 
 
-        // GET: Employee/Delete/5
+        // GET: Device/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            var device = await _context.Devices.FindAsync(id);
-            _context.Devices.Remove(device);
+            var IoTdevice = await _context.IoTDevices.FindAsync(id);
+   
+            AddDevice addDevice = addDevices.Find(x => x.id == (IoTdevice.ModelName.Replace(" ", "") + IoTdevice.UserId));
+
+            //IoTdevice.deviceAdd.DeleteDevice(IoTdevice.ConnectionString);
+            await addDevice.DeleteDevice(IoTdevice.ModelName.Replace(" ", "") + IoTdevice.UserId);
+            _context.IoTDevices.Remove(IoTdevice);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

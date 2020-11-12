@@ -1,4 +1,6 @@
 ﻿using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data;
+using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.SimulatedDeviceManager;
+using Microsoft.Azure.Devices;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,6 +24,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models
         public string ConnectionString { get; set; }
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
+        //public AddDevice deviceAdd { get; set; }
 
     }
 }

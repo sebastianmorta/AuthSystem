@@ -17,7 +17,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data
         public DeviceDbContext(DbContextOptions<DeviceDbContext> options): base(options)
         {
         }
-        public virtual DbSet<IoTDevice> Devices { get; set; }
+        public virtual DbSet<IoTDevice> IoTDevices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,7 +26,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
             builder.Entity<ApplicationUser>()
-                .HasMany(x => x.Devices)
+                .HasMany(x => x.IoTDevices)
                 .WithOne(z => z.ApplicationUser);
         }
 
