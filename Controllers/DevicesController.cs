@@ -5,7 +5,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data;
+//using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migrations;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models;
+using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.SimulatedDeviceManager;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +44,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         public IActionResult AddOrEdit(int id = 0)
         {
             if (id == 0)
-                return View(new Device());
+                return View(new IoTDevice());
             else
                 return View(_context.Devices.Find(id));
         }
@@ -52,19 +54,24 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit(Device device)
+        public async Task<IActionResult> AddOrEdit(IoTDevice device)
         {
 
             if (ModelState.IsValid)
             {
+                string deviceName;
                 var userId = _httpContextAccessor.HttpContext.User?.Claims?
                  .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
                 var xdd = _context.Users.FirstOrDefault(x => x.Id == userId);
                 device.UserId = userId;
-
-                if (device.DeviceId == 0)
+                if (device.DeviceId == 0) { 
                     _context.Add(device);
+                    var deviceid = device.DeviceId;
+                    deviceName = deviceid + "device" + userId;
+                    AddDevice addDevice = new AddDevice(deviceName);
+                    device.ConnectionString = addDevice.GetConnectionSrting();
+                }
                 else
                     _context.Update(device);
                 await _context.SaveChangesAsync();

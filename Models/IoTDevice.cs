@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models
 {
-    public class Device
+    public class IoTDevice
     {
         [Key]
         public int DeviceId { get; set; }
@@ -19,6 +19,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models
         public int MaxCoffeeWeight { get; set; }
         [Column(TypeName = "nvarchar(100)")]
         public string Status{ get; set; }
+        public string ConnectionString { get; set; }
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migrations
 {
     [DbContext(typeof(DeviceDbContext))]
-    [Migration("20201110210808_init")]
+    [Migration("20201111223203_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,7 +89,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.Device", b =>
+            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.IoTDevice", b =>
                 {
                     b.Property<int>("DeviceId")
                         .ValueGeneratedOnAdd()
@@ -98,6 +98,9 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConnectionString")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaxCoffeeWeight")
                         .HasColumnType("int");
@@ -112,8 +115,8 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DeviceId");
 
@@ -257,7 +260,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.Device", b =>
+            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.IoTDevice", b =>
                 {
                     b.HasOne("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data.ApplicationUser", "ApplicationUser")
                         .WithMany("Devices")

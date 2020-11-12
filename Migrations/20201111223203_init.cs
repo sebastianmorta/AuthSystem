@@ -163,7 +163,8 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     MaxWaterAmount = table.Column<int>(nullable: false),
                     MaxCoffeeWeight = table.Column<int>(nullable: false),
                     Status = table.Column<string>(type: "nvarchar(100)", nullable: true),
-                    UserId = table.Column<int>(nullable: false),
+                    ConnectionString = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
                     ApplicationUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

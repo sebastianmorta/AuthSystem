@@ -87,7 +87,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.Device", b =>
+            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.IoTDevice", b =>
                 {
                     b.Property<int>("DeviceId")
                         .ValueGeneratedOnAdd()
@@ -96,6 +96,9 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
 
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConnectionString")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MaxCoffeeWeight")
                         .HasColumnType("int");
@@ -255,7 +258,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.Device", b =>
+            modelBuilder.Entity("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.IoTDevice", b =>
                 {
                     b.HasOne("EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data.ApplicationUser", "ApplicationUser")
                         .WithMany("Devices")

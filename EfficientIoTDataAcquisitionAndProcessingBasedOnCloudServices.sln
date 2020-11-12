@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices", "EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.csproj", "{5B690C3A-0D0E-45C3-9193-F2B1B0E069F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulatedManagerDevice", "..\SimulatedManagerDevice\SimulatedManagerDevice.csproj", "{8414CBA8-C1DF-4D76-BA70-F0B586280752}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{5B690C3A-0D0E-45C3-9193-F2B1B0E069F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B690C3A-0D0E-45C3-9193-F2B1B0E069F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B690C3A-0D0E-45C3-9193-F2B1B0E069F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8414CBA8-C1DF-4D76-BA70-F0B586280752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8414CBA8-C1DF-4D76-BA70-F0B586280752}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8414CBA8-C1DF-4D76-BA70-F0B586280752}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8414CBA8-C1DF-4D76-BA70-F0B586280752}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

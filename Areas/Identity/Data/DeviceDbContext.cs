@@ -17,7 +17,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data
         public DeviceDbContext(DbContextOptions<DeviceDbContext> options): base(options)
         {
         }
-        public virtual DbSet<Device> Devices { get; set; }
+        public virtual DbSet<IoTDevice> Devices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
