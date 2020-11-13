@@ -67,17 +67,10 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
                 var xdd = _context.Users.FirstOrDefault(x => x.Id == userId);
                 IoTdevice.UserId = userId;
                 if (IoTdevice.DeviceId == 0) {
-                    //_context.Add(IoTdevice);
-                    //deviceName = devicenumber++ + "device" + userId;
-                    //AddDevice addDevice = new AddDevice(deviceName);
-                    ////IoTdevice.deviceAdd = addDevice;
-                    //IoTdevice.ConnectionString = addDevice.GetConnectionSrting();
-                    //await _context.SaveChangesAsync();
                     _context.Add(IoTdevice);
                     deviceName = IoTdevice.ModelName.Replace(" ", "") + userId;
                     AddDevice addDevice = new AddDevice(deviceName);
                     addDevices.Add(addDevice);
-                    //IoTdevice.deviceAdd = addDevice;
                     IoTdevice.ConnectionString = addDevice.GetConnectionSrting();
                 }
                 else
@@ -93,11 +86,12 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         public async Task<IActionResult> Delete(int? id)
         {
             var IoTdevice = await _context.IoTDevices.FindAsync(id);
-   
-            AddDevice addDevice = addDevices.Find(x => x.id == (IoTdevice.ModelName.Replace(" ", "") + IoTdevice.UserId));
-
-            //IoTdevice.deviceAdd.DeleteDevice(IoTdevice.ConnectionString);
-            await addDevice.DeleteDevice(IoTdevice.ModelName.Replace(" ", "") + IoTdevice.UserId);
+            string deviceName = IoTdevice.ModelName.Replace(" ", "") + IoTdevice.UserId;
+            AddDevice addDevice = addDevices.Find(x => x.id == deviceName); 
+            await addDevice.DeleteDevice(deviceName);
+        
+            addDevices.Remove(addDevice);
+           
             _context.IoTDevices.Remove(IoTdevice);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

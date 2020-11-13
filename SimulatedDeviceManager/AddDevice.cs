@@ -55,10 +55,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
             await registryManager.RemoveDeviceAsync(devicesToDelete);
         }
 
-        public string GetDeviceId()
-        {
-            return id;
-        }
+
         
     }
 }
