@@ -65,11 +65,42 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
             }
         }
 
+        public Tuple<double, double> MakeCoffe(double MaxCoffeeWeight, double MaxWaterAmount, double GrainWeightRequiredForOneCoffe, double WaterAmountRequiredForOneCoffe)
+        {
+            double CurrentWaterAmount = MaxCoffeeWeight - WaterAmountRequiredForOneCoffe;
+            double CurrentGrainWeight = MaxCoffeeWeight - GrainWeightRequiredForOneCoffe;
+
+            return Tuple.Create(CurrentWaterAmount, CurrentGrainWeight);
+        }
+
+        public Tuple<double, string> TurnONOFF (double CurrentWaterAount, double WaterAmountRequiredForRinse)
+        {
+            CurrentWaterAount -= WaterAmountRequiredForRinse;
+            if (CurrentWaterAount>0)
+            {
+                return Tuple.Create(CurrentWaterAount, "Wszystko w porządku ");
+            }
+            else
+            {
+                return Tuple.Create(0.0, "wymagane uzupełnienie wody");
+            }
+              
+        }
+
+
         /// <summary> 
         /// Send message to the Iot hub. This generates the object to be sent to the hub in the message.
         /// </summary>
         private static async Task SendDeviceToCloudMessagesAsync(CancellationToken token)
         {
+            double MaxCoffeeWeight;
+            double MaxWaterAmount;
+            double GrainWeightRequiredForOneCoffe;
+            double WaterAmountRequiredForOneCoffe;
+            double WaterAmountRequiredForRinse;
+
+
+
             double minTemperature = 20;
             double minHumidity = 60;
             Random rand = new Random();
