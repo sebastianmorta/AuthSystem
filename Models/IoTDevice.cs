@@ -19,7 +19,8 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models
         public string ModelName { get; set; }
         public int MaxWaterAmount { get; set; }
         public int MaxCoffeeWeight { get; set; }
-
+        public double CurrentWaterAmount { get; set; }
+        public double CurrentGrainAmount { get; set;}
         [Column(TypeName = "nvarchar(100)")]
         public string Status{ get; set; }
         public string ConnectionString { get; set; }

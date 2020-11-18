@@ -17,6 +17,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
         static RegistryManager registryManager;
         private static string deviceConnectionString;
         public string id;
+        //private SimulatedDevice simulatedDevice;
         
         public AddDevice(string _deviceId)
         {
