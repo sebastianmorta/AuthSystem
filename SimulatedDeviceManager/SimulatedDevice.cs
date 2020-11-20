@@ -14,28 +14,27 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
     public class SimulatedDevice
     {
 
-        private static DeviceClient s_deviceClient;
-        private static string s_myDeviceId = "";
+        private DeviceClient s_deviceClient;
+        private string s_myDeviceId = "";
         private readonly static string s_iotHubUri = "ContosoTestHub4445.azure-devices.net";
-        private static string s_deviceKey = "vxJyf9KUsiPIiPFcSmHZBh9PGSL507MEv4ZROT1b3Tk=";
+        private static string s_deviceKey = "";
 
         private IoTDevice iotDevice;
 
 
 
-        public SimulatedDevice(string _deviceId, string _deviceKey)
+        public SimulatedDevice(string _deviceId, string _deviceKey, IoTDevice _iotDevice)
         {
             s_myDeviceId = _deviceId;
             s_deviceKey = _deviceKey;
+            iotDevice = _iotDevice;
         }
 
 
-        private static async Task tak()
+        public async Task Startsimulating()
         {
-            //msg = "Routing Tutorial: Simulated device\n";
-
             s_deviceClient = DeviceClient.Create(s_iotHubUri,
-            new DeviceAuthenticationWithRegistrySymmetricKey(s_myDeviceId, s_deviceKey), TransportType.Mqtt);
+             new DeviceAuthenticationWithRegistrySymmetricKey(s_myDeviceId, s_deviceKey), TransportType.Mqtt);
 
             using var cts = new CancellationTokenSource();
             var messages = SendDeviceToCloudMessagesAsync(cts.Token);
@@ -54,16 +53,16 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
             return Tuple.Create(CurrentWaterAmount, CurrentGrainWeight);
         }
 
-        public Tuple<double, string> TurnONOFF (double CurrentWaterAount, double WaterAmountRequiredForRinse)
+        public Tuple<int, string> TurnONOFF (IoTDevice ioTDevice)
         {
-            CurrentWaterAount -= WaterAmountRequiredForRinse;
-            if (CurrentWaterAount>0)
+            iotDevice.CurrentWaterWeight -= iotDevice.WaterNessessaryForLavage;
+            if (iotDevice.CurrentWaterWeight>0)
             {
-                return Tuple.Create(CurrentWaterAount, "Wszystko w porządku ");
+                return Tuple.Create(iotDevice.CurrentWaterWeight, "Wszystko w porządku ");
             }
             else
             {
-                return Tuple.Create(0.0, "wymagane uzupełnienie wody");
+                return Tuple.Create(0, "wymagane uzupełnienie wody");
             }
               
         }
@@ -86,21 +85,68 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
         /// <summary> 
         /// Send message to the Iot hub. This generates the object to be sent to the hub in the message.
         /// </summary>
-        private static async Task SendDeviceToCloudMessagesAsync(CancellationToken token)
+        public async Task SendDeviceToCloudMessagesAsync(CancellationToken token)
         {
-            double MaxCoffeeWeight;
-            double MaxWaterAmount;
-            double GrainWeightRequiredForOneCoffe;
-            double WaterAmountRequiredForOneCoffe;
-            double WaterAmountRequiredForRinse;
-
-
-
-
-
-            double minTemperature = 20;
-            double minHumidity = 60;
             Random rand = new Random();
+
+            int CurrentWaterAmount = iotDevice.CurrentWaterWeight;
+            int CurrentCoffeeAmount = iotDevice.CurrentCoffeeWeight;
+            int CoffeeAmountNessessaryForCupOfCoffee = rand.Next(5, 20);
+            int WaterAmountNessessaryForCupOfCoffee = rand.Next(40, 240);
+
+
+
+            while (!token.IsCancellationRequested && (iotDevice.CurrentWaterWeight-CurrentCoffeeAmount>=WaterAmountNessessaryForCupOfCoffee))
+            {
+                string infoString;
+                string levelValue;
+
+                CurrentCoffeeAmount -= rand.Next(5, 10);
+
+                if (rand.NextDouble() > 0.7)
+                {
+                    if (rand.NextDouble() > 0.5)
+                    {
+                        levelValue = "critical";
+                        infoString = "This is a critical message.";
+                    }
+                    else
+                    {
+                        levelValue = "storage";
+                        infoString = "This is a storage message.";
+                    }
+                }
+                else
+                {
+                    levelValue = "normal";
+                    infoString = "This is a normal message.";
+                }
+
+
+                var telemetryDataPoint = new
+                {
+                    deviceId = s_myDeviceId,
+                    PoziomWody = CurrentWaterAmount,
+                    IlośćKawy = CurrentCoffeeAmount,
+                    pointInfo = infoString
+                };
+
+                var telemetryDataString = JsonConvert.SerializeObject(telemetryDataPoint);
+
+                using var message = new Message(Encoding.UTF8.GetBytes(telemetryDataString));
+
+                message.Properties.Add("level", levelValue);
+
+                await s_deviceClient.SendEventAsync(message);
+
+                await Task.Delay(rand.Next(5000));
+            }
+
+
+
+                double minTemperature = 20;
+            double minHumidity = 60;
+            
 
             while (!token.IsCancellationRequested)
             {
@@ -197,7 +243,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
         //    System.IO.File.WriteAllText(outputFilePathAndName, outputResult);
         //}
 
-        private static async void ReceiveC2dAsync()
+        public async void ReceiveC2dAsync()
         {
             //Console.WriteLine("\nReceiving cloud to device messages from service");
             while (true)

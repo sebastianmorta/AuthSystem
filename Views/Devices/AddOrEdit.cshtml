@@ -1,4 +1,4 @@
-﻿@model EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.Device
+﻿@model EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.IoTDevice
 @{
     ViewData["Title"] = "Create";
 }
@@ -17,16 +17,36 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label asp-for="MaxWaterAmount" class="control-label"></label>
-                    <input asp-for="MaxWaterAmount" class="form-control" />
-                    <span asp-validation-for="MaxWaterAmount" class="text-danger"></span>
+                    <label asp-for="WaterHopperCapacity" class="control-label"></label>
+                    <input asp-for="WaterHopperCapacity" class="form-control" />
+                    <span asp-validation-for="WaterHopperCapacity" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-6">
-                    <label asp-for="MaxCoffeeWeight" class="control-label"></label>
-                    <input asp-for="MaxCoffeeWeight" class="form-control" />
-                    <span asp-validation-for="MaxCoffeeWeight" class="text-danger"></span>
+                    <label asp-for="CoffeeHopperCapacity" class="control-label"></label>
+                    <input asp-for="CoffeeHopperCapacity" class="form-control" />
+                    <span asp-validation-for="CoffeeHopperCapacity" class="text-danger"></span>
                 </div>
             </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="WaterSlopCapacity" class="control-label"></label>
+                    <input asp-for="WaterSlopCapacity" class="form-control" />
+                    <span asp-validation-for="WaterSlopCapacity" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="CoffeeSlopCapacity" class="control-label"></label>
+                    <input asp-for="CoffeeSlopCapacity" class="form-control" />
+                    <span asp-validation-for="CoffeeSlopCapacity" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="WaterNessessaryForLavage" class="control-label"></label>
+                <input asp-for="WaterNessessaryForLavage" class="form-control" />
+                <span asp-validation-for="WaterNessessaryForLavage" class="text-danger"></span>
+            </div> 
+
+
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
                 <input asp-for="Status" class="form-control" />

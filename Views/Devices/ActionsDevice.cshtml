@@ -1,0 +1,56 @@
+﻿@model EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models.IoTDevice
+
+@{
+    ViewData["Title"] = "Actions";
+
+}
+
+
+<h4>ActionsDevice @Model.ModelName.ToUpper() </h4>
+<hr />
+
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="ActionsDevice">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="DeviceId" />
+
+            <div class="form-row">
+
+                @*<div class="form-group col-md-6">
+                    <a asp-action="TurnONOFF"><input type="submit" value="Włącz" class="btn btn-primary btn-block" /></a>
+                </div>*@
+                <div class="form-group col-md-6">
+                    @if (Model.Status)
+                    {
+                        <a asp-action="TurnONOFF" asp-for="Status" asp-route-id="@Model.DeviceId" class="btn btn-outline-primary btn-block"><i class="btn btn-lg btn-success"></i> Włączony</a>
+                    }
+                    else
+                    {
+                        <a asp-action="TurnONOFF" asp-for="Status" asp-route-id="@Model.DeviceId" class="btn btn-outline-primary btn-block"><i class="btn btn-md btn-danger"></i> Wyłączony</a>
+                    }
+                </div>
+                <div class="form-group col-md-6">
+                    @if (Model.Status)
+                    {
+                        <a asp-action="MakeCoffee" class="btn btn-primary btn-block"  >Zrób kawę</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-secondary btn-block" clicable="false">Zrób kawę</a>
+                    }
+
+                </div>
+                <div class="form-group col-md-12">
+                    <a asp-action="Index" class="btn btn-secondary btn-block"><i class="fa fa-table"></i>Powrót do listy</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

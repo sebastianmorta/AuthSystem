@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migrations
 {
-    public partial class init : Migration
+    public partial class adsettings : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -154,14 +154,19 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                 });
 
             migrationBuilder.CreateTable(
-                name: "Devices",
+                name: "IoTDevices",
                 columns: table => new
                 {
                     DeviceId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ModelName = table.Column<string>(type: "nvarchar(250)", nullable: false),
-                    MaxWaterAmount = table.Column<int>(nullable: false),
-                    MaxCoffeeWeight = table.Column<int>(nullable: false),
+                    WaterHopperCapacity = table.Column<int>(nullable: false),
+                    CoffeeHopperCapacity = table.Column<int>(nullable: false),
+                    CurrentWaterWeight = table.Column<int>(nullable: false),
+                    CurrentCoffeeWeight = table.Column<int>(nullable: false),
+                    WaterSlopCapacity = table.Column<int>(nullable: false),
+                    CoffeeSlopCapacity = table.Column<int>(nullable: false),
+                    WaterNessessaryForLavage = table.Column<int>(nullable: false),
                     Status = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     ConnectionString = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true),
@@ -169,9 +174,9 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Devices", x => x.DeviceId);
+                    table.PrimaryKey("PK_IoTDevices", x => x.DeviceId);
                     table.ForeignKey(
-                        name: "FK_Devices_AspNetUsers_ApplicationUserId",
+                        name: "FK_IoTDevices_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -218,8 +223,8 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Devices_ApplicationUserId",
-                table: "Devices",
+                name: "IX_IoTDevices_ApplicationUserId",
+                table: "IoTDevices",
                 column: "ApplicationUserId");
         }
 
@@ -241,7 +246,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Devices");
+                name: "IoTDevices");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

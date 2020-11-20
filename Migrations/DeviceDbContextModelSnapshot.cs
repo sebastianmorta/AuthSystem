@@ -97,19 +97,19 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CoffeeHopperCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoffeeSlopCapacity")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConnectionString")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("CurrentGrainAmount")
-                        .HasColumnType("float");
-
-                    b.Property<double>("CurrentWaterAmount")
-                        .HasColumnType("float");
-
-                    b.Property<int>("MaxCoffeeWeight")
+                    b.Property<int>("CurrentCoffeeWeight")
                         .HasColumnType("int");
 
-                    b.Property<int>("MaxWaterAmount")
+                    b.Property<int>("CurrentWaterWeight")
                         .HasColumnType("int");
 
                     b.Property<string>("ModelName")
@@ -121,6 +121,15 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WaterHopperCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WaterNessessaryForLavage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WaterSlopCapacity")
+                        .HasColumnType("int");
 
                     b.HasKey("DeviceId");
 

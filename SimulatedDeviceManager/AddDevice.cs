@@ -13,24 +13,25 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
     {
         
         static string connectionString = "HostName=ContosoTestHub4445.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=bg+kXtRLOxl0QiyIDz2z2GxAvCdW8SGO5dAPNUGGq1c=";
-        public static string deviceId = "";
+        public  string deviceId = "";
         static RegistryManager registryManager;
-        private static string deviceConnectionString;
+        private  string deviceConnectionString;
         public string id;
         //private SimulatedDevice simulatedDevice;
         
-        public AddDevice(string _deviceId)
+        public AddDevice(string _deviceId, bool addNew)
         {
             deviceId = _deviceId;
             id = deviceId;
             registryManager = RegistryManager.CreateFromConnectionString(connectionString);
-            AddDeviceAsync().Wait();
+            if(addNew)
+                AddDeviceAsync().Wait();
         }
         public AddDevice()
         {
 
         }
-        static async Task AddDeviceAsync()
+        public async Task AddDeviceAsync()
         {
             Device device;
             try

@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data;
-using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migrations;
+
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.SimulatedDeviceManager;
 using Microsoft.AspNetCore.Http;
@@ -20,7 +20,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         private readonly DeviceDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private static List<AddDevice>addDevices = new List<AddDevice>();
+        //private static List<AddDevice>addDevices = new List<AddDevice>();
 
         public DevicesController(DeviceDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -64,13 +64,15 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
                 var userId = _httpContextAccessor.HttpContext.User?.Claims?
                  .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
 
-                var xdd = _context.Users.FirstOrDefault(x => x.Id == userId);
+                var Uid = _context.Users.FirstOrDefault(x => x.Id == userId);
                 IoTdevice.UserId = userId;
                 if (IoTdevice.DeviceId == 0) {
+                    IoTdevice.CurrentCoffeeWeight = IoTdevice.CoffeeHopperCapacity;
+                    IoTdevice.CurrentWaterWeight = IoTdevice.WaterHopperCapacity;
                     _context.Add(IoTdevice);
                     deviceName = IoTdevice.ModelName.Replace(" ", "") + userId;
-                    AddDevice addDevice = new AddDevice(deviceName);
-                    addDevices.Add(addDevice);
+                    AddDevice addDevice = new AddDevice(deviceName, true);
+                    //addDevices.Add(addDevice);
                     IoTdevice.ConnectionString = addDevice.GetConnectionSrting();
                 }
                 else
@@ -81,16 +83,51 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
             return View(IoTdevice);
         }
 
+        //public async Task<IActionResult> ActionsDevice(int? id)
+        public IActionResult ActionsDevice(int? id)
+        {
+            return View(_context.IoTDevices.Find(id));
+        }
+
+        public async Task<IActionResult> TurnONOFF(int? id)
+        {
+            var iotDevice = await _context.IoTDevices.FindAsync(id);
+            //var device =  _context.IoTDevices.Where(x => x.UserId == id).FirstOrDefault();
+            //device.Status = !device.Status;
+            iotDevice.Status = !iotDevice.Status;
+
+            if (iotDevice.Status)
+            {
+
+            }
+
+            _context.Update(iotDevice);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task MakeCoffee(int id)
+        {
+            var iotDevice = await _context.IoTDevices.FindAsync(id);
+
+            //var iotDevice = _context.IoTDevices.Where(x => x.DeviceId == id).FirstOrDefault();
+            SimulatedDevice simulatedDevice = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
+            await simulatedDevice.Startsimulating();
+
+
+        }
+
 
         // GET: Device/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             var IoTdevice = await _context.IoTDevices.FindAsync(id);
             string deviceName = IoTdevice.ModelName.Replace(" ", "") + IoTdevice.UserId;
-            AddDevice addDevice = addDevices.Find(x => x.id == deviceName); 
-            await addDevice.DeleteDevice(deviceName);
-        
-            addDevices.Remove(addDevice);
+            //AddDevice addDevice = addDevices.Find(x => x.id == deviceName); 
+            //await addDevice.DeleteDevice(deviceName);
+            AddDevice adddevice = new AddDevice(deviceName,false);
+            await adddevice.DeleteDevice(deviceName);
+            //addDevices.Remove(adddevice);
            
             _context.IoTDevices.Remove(IoTdevice);
             await _context.SaveChangesAsync();

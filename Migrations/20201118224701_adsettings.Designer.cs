@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migrations
 {
     [DbContext(typeof(DeviceDbContext))]
-    [Migration("20201112213001_x")]
-    partial class x
+    [Migration("20201118224701_adsettings")]
+    partial class adsettings
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -99,13 +99,19 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("CoffeeHopperCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CoffeeSlopCapacity")
+                        .HasColumnType("int");
+
                     b.Property<string>("ConnectionString")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MaxCoffeeWeight")
+                    b.Property<int>("CurrentCoffeeWeight")
                         .HasColumnType("int");
 
-                    b.Property<int>("MaxWaterAmount")
+                    b.Property<int>("CurrentWaterWeight")
                         .HasColumnType("int");
 
                     b.Property<string>("ModelName")
@@ -117,6 +123,15 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Migration
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WaterHopperCapacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WaterNessessaryForLavage")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WaterSlopCapacity")
+                        .HasColumnType("int");
 
                     b.HasKey("DeviceId");
 
