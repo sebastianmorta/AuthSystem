@@ -34,7 +34,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
         public async Task Startsimulating()
         {
             s_deviceClient = DeviceClient.Create(s_iotHubUri,
-             new DeviceAuthenticationWithRegistrySymmetricKey(s_myDeviceId, s_deviceKey), TransportType.Mqtt);
+            new DeviceAuthenticationWithRegistrySymmetricKey(s_myDeviceId, s_deviceKey), TransportType.Mqtt);
 
             using var cts = new CancellationTokenSource();
             var messages = SendDeviceToCloudMessagesAsync(cts.Token);

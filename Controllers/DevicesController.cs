@@ -21,6 +21,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         //private static List<AddDevice>addDevices = new List<AddDevice>();
+        private SimulatedDevice simulated;
 
         public DevicesController(DeviceDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -96,23 +97,23 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
             //device.Status = !device.Status;
             iotDevice.Status = !iotDevice.Status;
 
-            if (iotDevice.Status)
-            {
-
-            }
-
             _context.Update(iotDevice);
             await _context.SaveChangesAsync();
+
+            if (iotDevice.Status)
+            {
+                simulated = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
+            }
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task MakeCoffee(int id)
+        public async Task MakeCoffee(int? id)
         {
             var iotDevice = await _context.IoTDevices.FindAsync(id);
 
             //var iotDevice = _context.IoTDevices.Where(x => x.DeviceId == id).FirstOrDefault();
-            SimulatedDevice simulatedDevice = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
-            await simulatedDevice.Startsimulating();
+            //SimulatedDevice simulatedDevice = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
+            await simulated.Startsimulating();
 
 
         }
