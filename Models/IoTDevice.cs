@@ -24,6 +24,8 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models
         public int WaterSlopCapacity { get; set; }
         public int CoffeeSlopCapacity { get; set; }
         public int WaterNessessaryForLavage { get; set; }
+        public int WaterNessessaryForCoffee { get; set; }
+        public int CoffeeNessessaryForCoffee { get; set; }
 
         [Column(TypeName = "nvarchar(100)")]
         public bool Status{ get; set; }
@@ -31,5 +33,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models
         public string UserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
+   
+        
     }
 }

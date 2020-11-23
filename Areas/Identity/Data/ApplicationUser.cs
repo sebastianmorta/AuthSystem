@@ -20,5 +20,6 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Ide
         //[PersonalData]
         //[Column(TypeName = "nvarchar(100)")]
         //public string User{ get; set; }
+        public string GetUserNick(ApplicationUser applicationUser) { return applicationUser.Nick; }
     }
 }

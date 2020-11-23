@@ -14,7 +14,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
         
         static string connectionString = "HostName=ContosoTestHub4445.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=bg+kXtRLOxl0QiyIDz2z2GxAvCdW8SGO5dAPNUGGq1c=";
         public  string deviceId = "";
-        static RegistryManager registryManager;
+        RegistryManager registryManager;
         private  string deviceConnectionString;
         public string id;
         //private SimulatedDevice simulatedDevice;
@@ -26,6 +26,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
             registryManager = RegistryManager.CreateFromConnectionString(connectionString);
             if(addNew)
                 AddDeviceAsync().Wait();
+            System.Diagnostics.Debug.WriteLine("hujwgeje");
         }
         public AddDevice()
         {
@@ -43,21 +44,16 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
                 device = await registryManager.GetDeviceAsync(deviceId);
             }
             deviceConnectionString = device.Authentication.SymmetricKey.PrimaryKey;
-
         }
 
         public string GetConnectionSrting()
         {
-
             return deviceConnectionString;
         }
 
         public async Task DeleteDevice(string devicesToDelete)
         {
             await registryManager.RemoveDeviceAsync(devicesToDelete);
-        }
-
-
-        
+        }        
     }
 }

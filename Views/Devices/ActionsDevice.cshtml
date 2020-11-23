@@ -9,6 +9,9 @@
 <h4>ActionsDevice @Model.ModelName.ToUpper() </h4>
 <hr />
 
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
 
 <div class="row">
     <div class="col-md-6">
@@ -19,26 +22,26 @@
             <div class="form-row">
 
                 @*<div class="form-group col-md-6">
-                    <a asp-action="TurnONOFF"><input type="submit" value="Włącz" class="btn btn-primary btn-block" /></a>
-                </div>*@
+                        <a asp-action="TurnONOFF"><input type="submit" value="Włącz" class="btn btn-primary btn-block" /></a>
+                    </div>*@
                 <div class="form-group col-md-6">
                     @if (Model.Status)
                     {
-                        <a asp-action="TurnONOFF" asp-for="Status" asp-route-id="@Model.DeviceId" class="btn btn-outline-primary btn-block"><i class="btn btn-lg btn-success"></i> Włączony</a>
+                        <a id="btn_turnOff" class="btn btn-outline-primary btn-block"><i class="btn btn-lg btn-success" style="cursor:pointer"></i> Włączony</a>
                     }
                     else
                     {
-                        <a asp-action="TurnONOFF" asp-for="Status" asp-route-id="@Model.DeviceId" class="btn btn-outline-primary btn-block"><i class="btn btn-md btn-danger"></i> Wyłączony</a>
+                        <a id="btn_turnOn" class="btn btn-outline-primary btn-block"><i class="btn btn-md btn-danger" style="cursor:pointer"></i> Wyłączony</a>
                     }
                 </div>
                 <div class="form-group col-md-6">
                     @if (Model.Status)
                     {
-                        <a asp-action="MakeCoffee" class="btn btn-primary btn-block">Zrób kawę</a>
+                        <a id="btn_make_coffe" class="btn btn-primary btn-block "  style="color:white">Zrób kawę</a>
                     }
                     else
                     {
-                        <a class="btn btn-secondary btn-block" clicable="false">Zrób kawę</a>
+                        <a class="btn btn-secondary btn-block" clicable="false" style="color:black">Zrób kawę</a>
                     }
                 </div>
                 <div class="form-group col-md-12">
@@ -50,6 +53,52 @@
     </div>
 </div>
 
+@Html.HiddenFor(x => x.DeviceId)
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+
+
+    $('#btn_turnOff').click(function () {
+
+        $.ajax({
+            url: '/Devices/TurnONOFF',
+            data: { id: $('#DeviceId').val() },
+            success: function () {
+                location.reload();
+            },
+            type: 'POST'
+        });
+    })
+
+    $('#btn_turnOn').click(function () {
+
+        $.ajax({
+            url: '/Devices/TurnONOFF',
+            data: { id: $('#DeviceId').val() },
+            success: function () {
+                location.reload();
+            },
+            type: 'POST'
+        });
+    })
+
+    $('#btn_make_coffe').click(function () {
+        $.ajax({
+            url: '/Devices/MakeCoffee',
+            data: { id: $('#DeviceId').val() },
+            success: function () {
+                location.reload();
+            },
+            //error: function () {
+            //    location.reload();
+            //},
+            type: 'POST'
+        });
+    })
+
+
+</script>

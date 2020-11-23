@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data;
@@ -21,7 +22,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         //private static List<AddDevice>addDevices = new List<AddDevice>();
-        private SimulatedDevice simulated;
+        //private SimulatedDevice simulated;
 
         public DevicesController(DeviceDbContext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
@@ -90,11 +91,11 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
             return View(_context.IoTDevices.Find(id));
         }
 
-        public async Task<IActionResult> TurnONOFF(int? id)
+        [HttpPost]
+        public async Task<IActionResult> TurnONOFF(int id)
         {
             var iotDevice = await _context.IoTDevices.FindAsync(id);
             //var device =  _context.IoTDevices.Where(x => x.UserId == id).FirstOrDefault();
-            //device.Status = !device.Status;
             iotDevice.Status = !iotDevice.Status;
 
             _context.Update(iotDevice);
@@ -102,19 +103,22 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
 
             if (iotDevice.Status)
             {
-                simulated = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
+                //simulated = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
             }
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
 
-        public async Task MakeCoffee(int? id)
+        public async Task<IActionResult> MakeCoffee(int? id)
         {
+            //var iotDevice = await _context.IoTDevices.FindAsync(id);
+            //var iotDevice = _context.IoTDevices.FirstOrDefault(x => x.DeviceId == id);
             var iotDevice = await _context.IoTDevices.FindAsync(id);
 
             //var iotDevice = _context.IoTDevices.Where(x => x.DeviceId == id).FirstOrDefault();
             //SimulatedDevice simulatedDevice = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
+            SimulatedDevice simulated = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
             await simulated.Startsimulating();
-
+            return Ok();
 
         }
 
