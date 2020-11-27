@@ -19,7 +19,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Cloud
         {
             deviceId = _deviceId;
                 System.Diagnostics.Debug.WriteLine("Press ENTER to start running jobs.");
-                Console.ReadLine();
+                Thread.Sleep(2000);
 
             jobClient = JobClient.CreateFromConnectionString(connString);
 
@@ -28,14 +28,14 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Cloud
             StartMethodJob(methodJobId);
             MonitorJob(methodJobId).Wait();
                 System.Diagnostics.Debug.WriteLine("Press ENTER to run the next job.");
-                Console.ReadLine();
+                Thread.Sleep(2000);
 
             string twinUpdateJobId = Guid.NewGuid().ToString();
 
             StartTwinUpdateJob(twinUpdateJobId);
             MonitorJob(twinUpdateJobId).Wait();
                 System.Diagnostics.Debug.WriteLine("Press ENTER to exit.");
-                Console.ReadLine();
+                Thread.Sleep(2000);
         }
         public async Task MonitorJob(string jobId)
         {

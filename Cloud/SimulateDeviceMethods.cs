@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Azure.Devices.Shared;
@@ -11,38 +12,39 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas
 {
     public class SimulateDeviceMethods
     {
-        string DeviceConnectionString = "";
-        DeviceClient Client = null;
+        string DeviceConnectionString = "HostName=ContosoTestHub4445.azure-devices.net;DeviceId=delonghi3caa1f7b-a878-401a-8e28-3826b03697a0;SharedAccessKey=mjIK0NifwwWbznHcsIk951UOpqwkJLsGd4QqiXfWqWs=";
+        //DeviceClient Client = null; 
 
-        public SimulateDeviceMethods()
+        public SimulateDeviceMethods(string connstring ,DeviceClient deviceClient)
         {
+            DeviceConnectionString = connstring;
             try
             {
                     System.Diagnostics.Debug.WriteLine("Connecting to hub");
-                Client = DeviceClient.CreateFromConnectionString(DeviceConnectionString, TransportType.Mqtt);
+                //deviceClient = DeviceClient.CreateFromConnectionString(DeviceConnectionString, TransportType.Mqtt);
 
-                Client.SetMethodHandlerAsync("LockDoor", LockDoor, null);
-                Client.SetDesiredPropertyUpdateCallbackAsync(OnDesiredPropertyChanged, null);
+                deviceClient.SetMethodHandlerAsync("LockDoor", MakeNewCoffee, null);
+                deviceClient.SetDesiredPropertyUpdateCallbackAsync(OnDesiredPropertyChanged, null);
 
                     System.Diagnostics.Debug.WriteLine("Waiting for direct method call and device twin update\n Press enter to exit.");
-                    Console.ReadLine();
+                Thread.Sleep(2000);
 
-                    System.Diagnostics.Debug.WriteLine("Exiting...");
+                System.Diagnostics.Debug.WriteLine("Exiting...");
 
-                Client.SetMethodHandlerAsync("LockDoor", null, null);
-                Client.CloseAsync().Wait();
+                deviceClient.SetMethodHandlerAsync("LockDoor", null, null);
+                deviceClient.CloseAsync().Wait();
             }
             catch (Exception ex)
             {
                     System.Diagnostics.Debug.WriteLine("Error in sample: {0}", ex.Message);
             }
         }
-        public Task<MethodResponse> LockDoor(MethodRequest methodRequest, object userContext)
+        public Task<MethodResponse> MakeNewCoffee(MethodRequest methodRequest, object userContext)
         {
                 System.Diagnostics.Debug.WriteLine("Locking Door!");
                 System.Diagnostics.Debug.WriteLine("\nReturning response for method {0}", methodRequest.Name);
 
-            string result = "'Door was locked.'";
+            string result = "'kawa została zrobiona.'";
             return Task.FromResult(new MethodResponse(Encoding.UTF8.GetBytes(result), 200));
         }
         public async Task OnDesiredPropertyChanged(TwinCollection desiredProperties, object userContext)

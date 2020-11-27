@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas.Identity.Data;
+using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Cloud;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Data;
 
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models;
@@ -118,6 +120,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Controlle
             //SimulatedDevice simulatedDevice = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
             SimulatedDevice simulated = new SimulatedDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId, iotDevice.ConnectionString, iotDevice);
             await simulated.Startsimulating();
+
             return Ok();
 
         }

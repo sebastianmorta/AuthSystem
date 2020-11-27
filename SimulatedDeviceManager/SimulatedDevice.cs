@@ -1,4 +1,5 @@
-﻿using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Cloud;
+﻿using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Areas;
+using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Cloud;
 using EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Models;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
@@ -14,14 +15,13 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
 {
     public class SimulatedDevice
     {
-        private DeviceClient s_deviceClient;
+        public DeviceClient s_deviceClient;
         private string s_myDeviceId = "";
         private readonly static string s_iotHubUri = "ContosoTestHub4445.azure-devices.net";
         private static string s_deviceKey = "";
 
         private IoTDevice iotDevice;
         bool x = false;
-
 
         public SimulatedDevice(string _deviceId, string _deviceKey, IoTDevice _iotDevice)
         {
@@ -36,10 +36,15 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
             s_deviceClient = DeviceClient.Create(s_iotHubUri,
             new DeviceAuthenticationWithRegistrySymmetricKey(s_myDeviceId, s_deviceKey), TransportType.Mqtt);
 
-            SendCloudToDevice receiver = new SendCloudToDevice(s_myDeviceId);
-            using var cts = new CancellationTokenSource();
-            var messages = SendDeviceToCloudMessagesAsync(cts.Token, receiver);
+            //SendCloudToDevice receiver = new SendCloudToDevice(s_myDeviceId);
+            using var cts = new CancellationTokenSource(); 
+            SendCloudToDevice receiver = new SendCloudToDevice(iotDevice.ModelName.Replace(" ", "") + iotDevice.UserId);
+            //SimulateDeviceMethods simulateDeviceMethods = new SimulateDeviceMethods("HostName = ContosoTestHub4445.azure - devices.net; DeviceId = delonghi3caa1f7b - a878 - 401a - 8e28 - 3826b03697a0; SharedAccessKey = mjIK0NifwwWbznHcsIk951UOpqwkJLsGd4QqiXfWqWs =", s_deviceClient);
+            //ScheduleJob scheduleJob = new ScheduleJob(s_myDeviceId , );
+            var messages = SendDeviceToCloudMessagesAsync(cts.Token);
             ReceiveC2dAsync();
+            Thread.Sleep(8000);
+            await receiver.SendCloudToDeviceMessageAsync();
             while (true) {
 
                 if (!x) continue;
@@ -95,7 +100,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
         /// <summary> 
         /// Send message to the Iot hub. This generates the object to be sent to the hub in the message.
         /// </summary>
-        public async Task SendDeviceToCloudMessagesAsync(CancellationToken token, SendCloudToDevice receiver)
+        public async Task SendDeviceToCloudMessagesAsync(CancellationToken token)
         {
             Random rand = new Random();
 
@@ -123,7 +128,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
                     x = true;
                 }
 
-                Coffeprogress += 20;
+                Coffeprogress += 5;
 
                 var telemetryDataPoint = new
                 {
@@ -136,13 +141,13 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
 
                 var telemetryDataString = JsonConvert.SerializeObject(telemetryDataPoint);
 
-                using var message = new Message(Encoding.UTF8 .GetBytes(telemetryDataString));
+                using var message = new Message(Encoding.UTF8.GetBytes(telemetryDataString));
 
                 message.Properties.Add("level", levelValue);
 
                 await s_deviceClient.SendEventAsync(message);
                 System.Diagnostics.Debug.WriteLine("{0} > Sent message: {1}", DateTime.Now, telemetryDataString);
-                receiver.SendCloudToDeviceMessageAsync().Wait(1000);
+                
                 await Task.Delay(1000);
             }
         }
@@ -156,8 +161,7 @@ namespace EfficientIoTDataAcquisitionAndProcessingBasedOnCloudServices.Simulated
                 Message receivedMessage = await s_deviceClient.ReceiveAsync();
                 if (receivedMessage == null) continue;
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                System.Diagnostics.Debug.WriteLine("Received message: {0}",
-                Encoding.ASCII.GetString(receivedMessage.GetBytes()));
+                System.Diagnostics.Debug.WriteLine(Encoding.ASCII.GetString(receivedMessage.GetBytes()));
                 Console.ResetColor();
                 await s_deviceClient.CompleteAsync(receivedMessage);
             }
